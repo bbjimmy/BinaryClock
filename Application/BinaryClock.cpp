@@ -43,7 +43,7 @@ TBinaryClock::TBinaryClock() :BApplication(APP_SIGNATURE)
 	face = 3;
 	
 	if (find_directory(B_USER_SETTINGS_DIRECTORY, &path) == B_OK) {
-		path.Append("BinaryClock_2.xx/settings");
+		path.Append("BinaryClock_2.xx_settings");
 		ref = open(path.Path(), O_RDONLY);
 		if (ref >= 0) {
 			read(ref, (char *)&wind_loc, sizeof(wind_loc));
