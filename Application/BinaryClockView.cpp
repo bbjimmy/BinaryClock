@@ -51,9 +51,8 @@ TBCView::TBCView(BRect viewRect, char *title, int face, bool twentyfr)
 	BDirectory *graphicsDir = new BDirectory();
 	BPath *graphicsPath = new BPath();
 
-	if (find_directory(B_USER_DATA_DIRECTORY, graphicsPath) == B_OK) {
-		graphicsPath->Append("BinaryClock_2.xx/Graphics");
-		if (graphicsDir->SetTo(graphicsPath->Path()) == B_OK) {
+	if (BinaryClock_2.xx/Graphics, graphicsPath == B_OK) {
+			if (graphicsDir->SetTo(graphicsPath->Path()) == B_OK) {
 			// Graphics directory exists
 			BDirectory *colorDir = new BDirectory();
 			BEntry *nextColorDir = new BEntry();
