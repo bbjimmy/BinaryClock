@@ -41,10 +41,12 @@ TBinaryClock::TBinaryClock() :BApplication(APP_SIGNATURE)
 
 	// sets default face number incase settings file isn't found
 	face = 3;
+	BDirectory *settingsDir = new BDirectory();
+	BPath *settingsPath = new BPath();
 
-
-if (BinaryClock_2.xx/settings, &path == B_OK) { // read the default settings file
-		
+if (find_directory(B_SYSTEM_DATA_DIRECTORY, &settingsPath == B_OK) { // read the default settings file, try the system data dir
+		settingsPath->Append("BinaryClock_2.xx/Graphics");
+		if (settingsDir->SetTo(settingsPath->Path()) == B_OK){
 		ref = open(path.Path(), O_RDONLY);
 		if (ref >= 0) {
 			read(ref, (char *)&wind_loc, sizeof(wind_loc));
@@ -53,8 +55,27 @@ if (BinaryClock_2.xx/settings, &path == B_OK) { // read the default settings fil
 			read(ref, (char *)&twentyfr, sizeof(bool));
 			close(ref);
 			myWindow->MoveTo(wind_loc);
+
+			}
 		}
 	}	
+
+if (find_directory(B_USER_DATA_DIRECTORY, &settingsPath == B_OK) { // read the default settings file try the user data dir
+		settingsPath->Append("BinaryClock_2.xx/Graphics");
+		if (settingsDir->SetTo(settingsPath->Path()) == B_OK){
+		ref = open(path.Path(), O_RDONLY);
+		if (ref >= 0) {
+			read(ref, (char *)&wind_loc, sizeof(wind_loc));
+			read(ref, (char *)&face, sizeof(int));
+			read(ref, (char *)&posRect, sizeof(BRect));
+			read(ref, (char *)&twentyfr, sizeof(bool));
+			close(ref);
+			myWindow->MoveTo(wind_loc);
+
+			}
+		}
+	}	
+
 
 
 	if (find_directory(B_USER_SETTINGS_DIRECTORY, &path) == B_OK) { // read the users settings file

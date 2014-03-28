@@ -51,7 +51,8 @@ TBCView::TBCView(BRect viewRect, char *title, int face, bool twentyfr)
 	BDirectory *graphicsDir = new BDirectory();
 	BPath *graphicsPath = new BPath();
 
-	if (BinaryClock_2.xx/Graphics, graphicsPath == B_OK) {
+	if ((find_directory(B_SYSTEM_DATA_DIRECTORY, &graphicsPath == B_OK)  {
+			graphicsPath->Append("BinaryClock_2.xx/Graphics");
 			if (graphicsDir->SetTo(graphicsPath->Path()) == B_OK) {
 			// Graphics directory exists
 			BDirectory *colorDir = new BDirectory();
@@ -86,7 +87,46 @@ TBCView::TBCView(BRect viewRect, char *title, int face, bool twentyfr)
 		}	
 	}
 	else {
-		success = false;
+		
+		if ((find_directory(B_USER_DATA_DIRECTORY, &graphicsPath == B_OK)  {
+			graphicsPath->Append("BinaryClock_2.xx/Graphics");
+			if (graphicsDir->SetTo(graphicsPath->Path()) == B_OK) {
+			// Graphics directory exists
+			BDirectory *colorDir = new BDirectory();
+			BEntry *nextColorDir = new BEntry();
+			BPath *curPath = new BPath();
+			char curPathStr[B_PATH_NAME_LENGTH];
+			graphicsDir->Rewind();
+			while (graphicsDir->GetNextEntry(nextColorDir) == B_OK) {
+				colorDir = new BDirectory(nextColorDir);
+				if ((colorDir->Contains("on", B_FILE_NODE)) && (colorDir->Contains("off", B_FILE_NODE))) {
+					if (nextColorDir->GetPath(curPath) == B_OK) {
+						if (i == COLOR_ARRAY_SIZE) {
+							BAlert *ExitAlert = new BAlert("Fatal Error", "You have more choices in the Graphics directory than this program can handle.  Increase COLOR_ARRAY_SIZE in the source code and recompile.", "I'm Sorry", NULL, NULL, B_WIDTH_AS_USUAL, B_STOP_ALERT);
+							ExitAlert->Go();
+							exit(1);
+						}
+						sprintf(curPathStr, "%s/on", curPath->Path());
+						DotOn[i] = BTranslationUtils::GetBitmapFile(curPathStr);
+						sprintf(curPathStr, "%s/off", curPath->Path());
+						DotOff[i] = BTranslationUtils::GetBitmapFile(curPathStr);
+						i++;
+					}
+				}
+			}
+			numcolors = i;
+	
+			// This should not be added to the view as a child.
+			TheMenu = new TMainMenu("themenu", graphicsDir, numcolors);
+		}
+		else {
+			success = false;
+		}	
+	}
+		
+		
+		
+		//success = false;
 	}	
 
 	// Graphics directory does not exist
