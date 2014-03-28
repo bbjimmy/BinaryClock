@@ -41,8 +41,23 @@ TBinaryClock::TBinaryClock() :BApplication(APP_SIGNATURE)
 
 	// sets default face number incase settings file isn't found
 	face = 3;
-	
-	if (find_directory(B_USER_SETTINGS_DIRECTORY, &path) == B_OK) {
+
+
+if (find_directory(B_USER_DATA_DIRECTORY, &path) == B_OK) { // read the default settings file
+		path.Append("BinaryClock_2.xx/settings");
+		ref = open(path.Path(), O_RDONLY);
+		if (ref >= 0) {
+			read(ref, (char *)&wind_loc, sizeof(wind_loc));
+			read(ref, (char *)&face, sizeof(int));
+			read(ref, (char *)&posRect, sizeof(BRect));
+			read(ref, (char *)&twentyfr, sizeof(bool));
+			close(ref);
+			myWindow->MoveTo(wind_loc);
+		}
+	}	
+
+
+	if (find_directory(B_USER_SETTINGS_DIRECTORY, &path) == B_OK) { // read the users settings file
 		path.Append("BinaryClock_2.xx_settings");
 		ref = open(path.Path(), O_RDONLY);
 		if (ref >= 0) {
