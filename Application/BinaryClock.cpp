@@ -8,6 +8,7 @@
 ****************************************************************/
 #include <Debug.h>
 #include <Path.h>
+#include <Directory.h>
 #include <Screen.h>
 #include <FindDirectory.h>
 #include <TranslationKit.h>
@@ -41,12 +42,11 @@ TBinaryClock::TBinaryClock() :BApplication(APP_SIGNATURE)
 
 	// sets default face number incase settings file isn't found
 	face = 3;
-	BDirectory *settingsDir = new BDirectory();
-	BPath *settingsPath = new BPath();
-
-if (find_directory(B_SYSTEM_DATA_DIRECTORY, &settingsPath == B_OK) { // read the default settings file, try the system data dir
-		settingsPath->Append("BinaryClock_2.xx/Graphics");
-		if (settingsDir->SetTo(settingsPath->Path()) == B_OK){
+	ref = -10;
+	
+if (find_directory(B_SYSTEM_DATA_DIRECTORY, &path) == B_OK) { // read the default settings file, try the system data dir
+		path.Append("BinaryClock_2.xx/settings");
+		
 		ref = open(path.Path(), O_RDONLY);
 		if (ref >= 0) {
 			read(ref, (char *)&wind_loc, sizeof(wind_loc));
@@ -54,15 +54,16 @@ if (find_directory(B_SYSTEM_DATA_DIRECTORY, &settingsPath == B_OK) { // read the
 			read(ref, (char *)&posRect, sizeof(BRect));
 			read(ref, (char *)&twentyfr, sizeof(bool));
 			close(ref);
+			ref = -10;
 			myWindow->MoveTo(wind_loc);
 
 			}
-		}
+		
 	}	
 
-if (find_directory(B_USER_DATA_DIRECTORY, &settingsPath == B_OK) { // read the default settings file try the user data dir
-		settingsPath->Append("BinaryClock_2.xx/Graphics");
-		if (settingsDir->SetTo(settingsPath->Path()) == B_OK){
+if (find_directory(B_USER_DATA_DIRECTORY, &path) == B_OK) { // read the default settings file try the user data dir
+		path.Append("BinaryClock_2.xx/settings");
+	
 		ref = open(path.Path(), O_RDONLY);
 		if (ref >= 0) {
 			read(ref, (char *)&wind_loc, sizeof(wind_loc));
@@ -70,10 +71,11 @@ if (find_directory(B_USER_DATA_DIRECTORY, &settingsPath == B_OK) { // read the d
 			read(ref, (char *)&posRect, sizeof(BRect));
 			read(ref, (char *)&twentyfr, sizeof(bool));
 			close(ref);
+			ref = -10;
 			myWindow->MoveTo(wind_loc);
 
 			}
-		}
+		
 	}	
 
 
